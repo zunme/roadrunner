@@ -28,7 +28,8 @@ ENV COMPOSER_HOME="/tmp/composer"
 
 RUN set -x \
     # install permanent dependencies
-    && apk add --no-cache \
+    && apk update && apk add --no-cache \
+	git \
         icu-libs \
         coreutils \
         freetype-dev \
@@ -50,10 +51,11 @@ RUN set -x \
 	libxml2-dev \
         icu-dev zlib-dev automake libzip-dev \
 	libpng-dev libwebp-dev libjpeg-turbo-dev freetype-dev \
-    && mkdir /temp \ 
-    && pecl install -o /tmp/redis.tgz \
+    #&& mkdir /temp \ 
+    #&& pecl install -o /tmp/redis.tgz \
     #&& mkdir -p /usr/src/php/ext/redis \
     #&& curl -fsSL https://pecl.php.net/get/redis --ipv4 | tar xvz -C "/usr/src/php/ext/redis" --strip 1 \
+    && pecl install -o redis \
     && docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg --with-webp \
     # install PHP extensions (CFLAGS usage reason - https://bit.ly/3ALS5NU)
     && CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install -j$(nproc) \
@@ -73,7 +75,7 @@ RUN set -x \
 	#json \
 	mbstring mysqli \
 	pdo pdo_mysql xml \
-	zip bz2 \
+	#zip bz2 \
         #1>/dev/null \
     #&& pecl install -o redis \
     && echo 'extension=redis.so' > ${PHP_INI_DIR}/conf.d/redis.ini \
