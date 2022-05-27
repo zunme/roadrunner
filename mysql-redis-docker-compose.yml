@@ -8,7 +8,11 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - ./storage_database/:/var/lib/mysql
+      - ./storage_database/conf.d:/etc/mysql/conf.d
+      - ./storage_database/lib:/var/lib/mysql
+      - ./storage_database/initdb.d:/docker-entrypoint-initdb.d
+      - ./storage_database/data:/data
+
     mem_limit: 512m
     networks:
       - mysqlnetwork
@@ -22,6 +26,7 @@ services:
       - PMA_PORT=3306
       - PMA_USER=root
       - PMA_PASSWORD=root
+      - TZ=Asia/Seoul
 
   mysql-admin:
     restart: always
@@ -47,10 +52,11 @@ services:
     command: /bin/bash -c 'redis-server --appendonly yes'
     sysctls:
       - net.core.somaxconn=65535
+        #- vm.overcommit_memory=1
     ports:
       - "6380:6379"
     volumes:
-      - ./redis:/data
+      - ./storage_database/redis:/data
     mem_limit: 96m
     networks:
       - mysqlnetwork

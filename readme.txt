@@ -22,3 +22,6 @@ Create a file: /etc/resolv.conf. If it exists, replace existing one with this n
 Put the following lines in the file
 nameserver 8.8.8.8
 Repeat step 3 and 4. You will see git working fine now.
+
+
+docker-compose -f mysql-redis-docker-compose.yml up -d
