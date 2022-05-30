@@ -12,7 +12,7 @@ FROM node:18-alpine as frontend
 #        && NODE_ENV="production" yarn run prod
 
 # fetch the RoadRunner image, image page: <https://hub.docker.com/r/spiralscout/roadrunner>
-FROM spiralscout/roadrunner:2.10.1 as roadrunner
+FROM spiralscout/roadrunner:2.10.2 as roadrunner
 
 # fetch the Composer image, image page: <https://hub.docker.com/_/composer>
 FROM composer:2.3.5 as composer
@@ -22,7 +22,6 @@ FROM php:8.1.6-alpine as runtime
 
 # install composer, image page: <https://hub.docker.com/_/composer>
 COPY --from=composer /usr/bin/composer /usr/bin/composer
-COPY /dbdata/redis.tgz /tmp/redis.tgz
 
 ENV COMPOSER_HOME="/tmp/composer"
 
