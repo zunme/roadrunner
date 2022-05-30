@@ -1,14 +1,11 @@
 version: '3.2'
 
 volumes:
-  redis-data: {}
   tmp-data: {}
 
 services:
   app: &app
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: zunme/lara-road:1.1
     user: "${APP_UID:-10001}:${APP_GID:-10001}"
     dns:
         - 8.8.8.8
@@ -18,9 +15,9 @@ services:
       HOME: /tmp
       APP_DEBUG: 'true'
       APP_ENV: local
-      REDIS_HOST: redis
-      REDIS_PASSWORD: redis_password
-      DB_HOST: mysql 
+      REDIS_HOST: 150.230.252.144
+      REDIS_PASSWORD:
+      DB_HOST: 150.230.252.144
       DB_DATABASE: laravel
       DB_USERNAME: laravel
       DB_PASSWORD: laravel
@@ -29,11 +26,6 @@ services:
       - /etc/group:/etc/group:ro
       - tmp-data:/tmp:rw
       - .:/app:rw
-    depends_on:
-      mysql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
 
   web:
     <<: *app
@@ -53,35 +45,4 @@ services:
   cron:
     <<: *app
     command: supercronic /etc/supercronic/laravel # it runs artisan schedule:run
-
-  mysql:
-    image: mysql:8
-    restart: always
-    volumes:
-        - "./dbdata/conf.d:/etc/mysql/conf.d"
-        - "./dbdata/lib:/var/lib/mysql"
-        - "./dbdata/initdb.d:/docker-entrypoint-initdb.d"
-        - "./dbdata/data:/data"
-    ports:
-        - 3306:3306
-    environment:
-        MYSQL_ROOT_PASSWORD: 1234
-        MYSQL_PASSWORD: laravel
-        MYSQL_USER: laravel
-        TZ: Asia/Seoul
-    healthcheck:
-        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-        timeout: 5s
-        interval: 2s
-
-  redis:
-    image: redis:6.2.6-alpine # Image page: <https://hub.docker.com/_/redis>
-    command: redis-server --requirepass redis_password
-    volumes:
-      - redis-data:/data:rw
-    ports:
-      - 6379/tcp
-    healthcheck:
-      test: ['CMD-SHELL', 'redis-cli ping']
-      interval: 2s
-      timeout: 5s
+                       
