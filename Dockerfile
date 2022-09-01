@@ -15,7 +15,7 @@ FROM node:18-alpine as frontend
 FROM spiralscout/roadrunner:2.10.2 as roadrunner
 
 # fetch the Composer image, image page: <https://hub.docker.com/_/composer>
-FROM composer:2.3.5 as composer
+FROM composer:2.4.1 as composer
 
 # build application runtime, image page: <https://hub.docker.com/_/php>
 FROM php:8.1.6-alpine as runtime
