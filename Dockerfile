@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.2
 
 #    # Build application front-end (you can drop this block at all if you want)
-FROM node:18-alpine as frontend
+FROM node:19-alpine as frontend
 #    # copy all application sources
 #    COPY . /app/
 #    # use directory with application sources by default
